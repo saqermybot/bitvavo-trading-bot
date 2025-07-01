@@ -1,10 +1,10 @@
-
 import requests
 import time
 import hmac
 import hashlib
+import json
 
-API_KEY = "048978b32d41f1c2760696de00d61bc0d3973a1815379628fc3dd6"
+API_KEY = "048978b32d41f1c2760696de00d61bc0d3973a1815379628fc3dd6bda9933776"
 API_SECRET = "617c1100573da9820ce0f47dd4d3928c8db39251e7cc3997409711f92fff61f1a5580c1bec3db28f6eb89b523fb1b31446f394c97bab575dcc9ed876de751ab8"
 BASE_URL = "https://api.bitvavo.com/v2"
 
@@ -32,9 +32,10 @@ def get_markets():
     url = BASE_URL + "/markets"
     headers = sign_request("GET", "markets")
     r = requests.get(url, headers=headers)
-    return r.json()
+    return json.loads(r.text)
 
 if __name__ == "__main__":
     markets = get_markets()
     for m in markets:
-        print(m["market"])
+        if isinstance(m, dict) and "market" in m:
+            print(m["market"])
